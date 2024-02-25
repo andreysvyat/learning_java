@@ -1,10 +1,10 @@
 package learning;
 
 import javax.swing.*;
+import javax.swing.text.AbstractDocument;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
+@SuppressWarnings("ALL")
 public class SimpleInterface extends JFrame {
     private static final long serialVersionUID = 7935744483864663534L;
 	private JTextField inputField;
@@ -17,14 +17,12 @@ public class SimpleInterface extends JFrame {
         setLayout(new BorderLayout());
 
         inputField = new JTextField();
-        inputField.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String userInput = inputField.getText();
-                outputArea.append(userInput + "\n");
-                inputField.setText(""); // Clear the input field after processing
-            }
+        inputField.addActionListener(e -> {
+            String userInput = inputField.getText();
+            outputArea.append(userInput + "\n");
+            inputField.setText(""); // Clear the input field after processing
         });
+        ((AbstractDocument)inputField.getDocument()).setDocumentFilter(new HighlightDocumentFilter(inputField, "{}[]()<>", Color.pink));
 
         outputArea = new JTextArea();
         outputArea.setEditable(false); // Make output area read-only
@@ -35,12 +33,9 @@ public class SimpleInterface extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                SimpleInterface simpleInterface = new SimpleInterface();
-                simpleInterface.setVisible(true);
-            }
+        SwingUtilities.invokeLater(() -> {
+            SimpleInterface simpleInterface = new SimpleInterface();
+            simpleInterface.setVisible(true);
         });
     }
 }
